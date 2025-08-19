@@ -1,9 +1,9 @@
 import Image from 'next/image'
-import Navbar from '@/components/NavBar'
-import Footer from '@/components/Footer'
-import AboutSection from '@/components/AboutSection'
-import FeaturesSection from '@/components/FeaturesSection'
-import TypewriterText from '@/components/TypewriterText'
+import Navbar from '@/components/module/NavBar'
+import Footer from '@/components/module/Footer'
+import AboutSection from '@/components/module/AboutSection'
+import FeaturesSection from '@/components/module/FeaturesSection'
+import TypewriterText from '@/components/module/TypewriterText'
 
 export default function Home() {
   return (
