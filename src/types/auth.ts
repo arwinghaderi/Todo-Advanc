@@ -15,8 +15,6 @@ export type LoginPayload = {
 
 // types/auth.ts
 export type RegisterPayload = {
-  firstName: string
-  lastName: string
   email: string
   username: string
   password: string
@@ -28,9 +26,8 @@ export type DummyRegisterResponse = {
   email: string
   username: string
   image: string
-  accessToken?: string 
+  accessToken?: string
 }
-
 
 export type DummyErrorResponse = {
   message: string

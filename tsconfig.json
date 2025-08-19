@@ -22,7 +22,8 @@
       "@/*": ["./src/*"],
       "@/components/modules/*": ["./src/components/modules/*"],
       "@/components/templates/*": ["./src/components/templates/*"],
-      "@/Redux/*": ["./src/Redux/*"]
+      "@/Redux/*": ["./src/Redux/*"],
+      "@/lib/*": ["./src/lib/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

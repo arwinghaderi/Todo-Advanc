@@ -12,14 +12,55 @@ export const userLogin = createAsyncThunk<
   LoginPayload,
   { rejectValue: DummyErrorResponse }
 >('user/userLogin', async (payload, { rejectWithValue }) => {
+  console.log('payload', payload)
   try {
     const response = await fetch('https://dummyjson.com/auth/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
+      headers: { 'Content-Type': 'application/json' },
+      // credentials: 'include',
+      body: JSON.stringify({
+        username: payload.username,
+        password: payload.password,
+        expiresInMins: 30,
+      }),
     })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      return rejectWithValue(data)
+    }
+
+    return data
+  } catch {
+    return rejectWithValue({ message: 'خطای ناشناخته', status: 500 })
+  }
+})
+
+export const userRegister = createAsyncThunk<
+  DummyLoginResponse,
+  RegisterPayload,
+  { rejectValue: DummyErrorResponse }
+>('user/userRegister', async (payload, { rejectWithValue }) => {
+  try {
+    console.log('payload', payload)
+    const response = await fetch(
+      `https://xxxx.backendless.app/api/users/register`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': 'reqres-free-v1',
+        },
+        body: JSON.stringify({
+          email: payload.email,
+          password: payload.password,
+          usename: payload.username,
+        }),
+      }
+    )
+
+    console.log(response, 'response')
 
     if (!response.ok) {
       const errorData: DummyErrorResponse = await response.json()
@@ -33,73 +74,38 @@ export const userLogin = createAsyncThunk<
   }
 })
 
-export const userRegister = createAsyncThunk<
-  DummyLoginResponse,
-  RegisterPayload,
-  { rejectValue: DummyErrorResponse }
->('user/userRegister', async (payload, { rejectWithValue }) => {
-  try {
-    const registerRes = await fetch('https://dummyjson.com/users/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    })
-
-    if (!registerRes.ok) {
-      const errorData: DummyErrorResponse = await registerRes.json()
-      return rejectWithValue(errorData)
-    }
-
-    const loginRes = await fetch('https://dummyjson.com/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: payload.username,
-        password: payload.password,
-      }),
-    })
-
-    if (!loginRes.ok) {
-      const errorData: DummyErrorResponse = await loginRes.json()
-      return rejectWithValue(errorData)
-    }
-
-    const loginData: DummyLoginResponse = await loginRes.json()
-    return loginData
-  } catch {
-    return rejectWithValue({ message: 'خطای ناشناخته', status: 500 })
-  }
-})
-
 interface AuthState {
   user: User | null
 }
 
-const savedUser = localStorage.getItem('user')
-
 const initialState: AuthState = {
-  user: savedUser ? JSON.parse(savedUser) : null,
+  user: null,
 }
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    setUser: (state, action) => {
+      state.user = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.user = action.payload
-      localStorage.setItem('user', JSON.stringify(action.payload))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(action.payload))
+      }
     })
 
     builder.addCase(userRegister.fulfilled, (state, action) => {
       state.user = action.payload
-      localStorage.setItem('user', JSON.stringify(action.payload))
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('user', JSON.stringify(action.payload))
+      }
     })
   },
 })
 
+export const { setUser } = authSlice.actions
 export default authSlice.reducer
