@@ -97,27 +97,43 @@ export default function NavBar() {
           </ul>
 
           <button
-            className="md:hidden text-2xl"
-            onClick={() => setIsOpen(true)}
+            className="md:hidden text-2xl transition-transform duration-300 text-white hover:text-yellow-300"
+            onClick={() => setIsOpen((prev) => !prev)}
           >
-            ☰
+            <span
+              className={`inline-block transition-transform duration-300 ${
+                isOpen ? 'rotate-90 scale-110' : 'rotate-0'
+              }`}
+            >
+              {isOpen ? '✕' : '☰'}
+            </span>
           </button>
         </div>
       </nav>
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-64 bg-white z-[1000] shadow-lg transform transition-transform duration-500 ${
+        className={`fixed top-0 right-0 h-full w-64   border-l-indigo-600 border-4 rounded-2xl bg-white z-[1000] shadow-lg transform transition-transform duration-500 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex justify-end p-4">
+        <div className="flex justify-between items-center px-4 py-4 border-b">
+          <Link
+            href="/auth/sign-in"
+            className="flex items-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition"
+            onClick={() => setIsOpen(false)}
+          >
+            <FaUserCircle className="text-xl" />
+            ورود / ثبت‌نام
+          </Link>
+
           <IoCloseCircleOutline
-            className="text-primary text-3xl cursor-pointer"
+            className="text-indigo-600 text-3xl cursor-pointer hover:text-indigo-800 transition"
             onClick={() => setIsOpen(false)}
           />
         </div>
-        <ul className="flex flex-col gap-6 px-6 text-lg font-semibold text-indigo-700">
+
+        <ul className="flex flex-col gap-6 px-6 py-6 text-lg font-semibold text-indigo-700">
           <li>
             <a
               href="#about"
@@ -143,15 +159,6 @@ export default function NavBar() {
             >
               امکانات کلیدی
             </a>
-          </li>
-          <li>
-            <Link
-              href="/auth/sign-in"
-              className="bg-primary text-white px-4 py-2 rounded-lg text-center"
-              onClick={() => setIsOpen(false)}
-            >
-              ورود / ثبت‌نام
-            </Link>
           </li>
         </ul>
       </div>
