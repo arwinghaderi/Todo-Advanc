@@ -21,7 +21,8 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/components/modules/*": ["./src/components/modules/*"],
-      "@/components/templates/*": ["./src/components/templates/*"]
+      "@/components/templates/*": ["./src/components/templates/*"],
+      "@/Redux/*": ["./src/Redux/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
