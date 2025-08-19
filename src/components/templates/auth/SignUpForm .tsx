@@ -1,6 +1,8 @@
 'use client'
 
 import Link from 'next/link'
+import Input from '@/components/module/Input'
+import Button from '@/components/module/Button'
 
 export default function SignUpForm() {
   return (
@@ -10,50 +12,28 @@ export default function SignUpForm() {
       </h1>
 
       <form className="space-y-5">
-        <div>
-          <label htmlFor="username" className="block mb-1 font-medium">
-            نام کاربری
-          </label>
-          <input
-            type="text"
-            id="username"
-            className="w-full px-4 py-2 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            placeholder="erwin_dev"
-          />
-        </div>
+        <Input
+          id="username"
+          type="text"
+          label="نام کاربری"
+          placeholder="erwin_dev"
+        />
 
-        <div>
-          <label htmlFor="email" className="block mb-1 font-medium">
-            ایمیل
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full px-4 py-2 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            placeholder="you@example.com"
-          />
-        </div>
+        <Input
+          id="email"
+          type="email"
+          label="ایمیل"
+          placeholder="you@example.com"
+        />
 
-        <div>
-          <label htmlFor="password" className="block mb-1 font-medium">
-            رمز عبور
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full px-4 py-2 rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-indigo-400"
-            placeholder="••••••••"
-          />
-        </div>
+        <Input
+          id="password"
+          type="password"
+          label="رمز عبور"
+          placeholder="••••••••"
+        />
 
-    
-
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 transition px-4 py-2 rounded-lg font-semibold text-white shadow-md"
-        >
-          ثبت‌نام
-        </button>
+        <Button type="submit" text="ثبت‌نام" />
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-200">
