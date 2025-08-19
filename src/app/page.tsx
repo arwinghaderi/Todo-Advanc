@@ -10,7 +10,10 @@ export default function Home() {
     <main className="flex flex-col min-h-screen bg-gradient-to-br from-indigo-500 to-purple-600 text-white">
       <Navbar />
 
-      <header className="relative flex flex-col items-center justify-center flex-1 text-center px-6 py-24 md:py-32 overflow-hidden">
+      <header
+        id="hero"
+        className="relative flex flex-col items-center justify-center flex-1 text-center px-6 py-24 md:py-32 overflow-hidden"
+      >
         <div className="absolute inset-0">
           <Image
             src="/hero-bg.jpg"
@@ -39,8 +42,14 @@ export default function Home() {
         </div>
       </header>
 
-      <AboutSection />
-      <FeaturesSection />
+      <section id="about" className="scroll-mt-32">
+        <AboutSection />
+      </section>
+
+      <section id="features" className="scroll-mt-32">
+        <FeaturesSection />
+      </section>
+
       <Footer />
     </main>
   )
