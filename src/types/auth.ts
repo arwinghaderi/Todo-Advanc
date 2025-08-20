@@ -15,7 +15,6 @@ export type LoginPayload = {
   password: string
 }
 
-// types/auth.ts
 export type RegisterPayload = {
   email: string
   username: string

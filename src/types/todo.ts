@@ -17,3 +17,6 @@ export interface ApiError {
 }
 
 export type TodosResult = TodosResponse | ApiError
+
+
+export type FilterType = 'all' | 'completed' | 'incomplete'

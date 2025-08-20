@@ -10,32 +10,17 @@ import { Todo } from '@/types/todo'
 
 export default function List() {
   const dispatch = useDispatch<AppDispatch>()
+  const filter = useSelector((state: RootState) => state.todos.filter)
+  const todos = useSelector((state: RootState) => state.todos.todos)
 
   const queryFn = useMemo(() => {
-    return async () => {
-      const result = await dispatch(getTodos())
-
-      if (getTodos.fulfilled.match(result)) {
-        return result.payload
-      }
-
-      const errorMessage =
-        typeof result.payload === 'object' &&
-        result.payload !== null &&
-        'message' in result.payload
-          ? (result.payload as { message: string }).message
-          : 'خطا در دریافت داده‌ها'
-
-      throw new Error(errorMessage)
-    }
+    return () => dispatch(getTodos()).unwrap()
   }, [dispatch])
 
   const { isLoading, error } = useQuery({
     queryKey: ['todos'],
     queryFn,
   })
-
-  const todos = useSelector((state: RootState) => state.todos.todos)
 
   if (isLoading) return <p>در حال دریافت...</p>
   if (error) return <p>خطا در دریافت داده‌ها</p>
@@ -47,12 +32,18 @@ export default function List() {
       )
     : []
 
+  const filteredTodos = validTodos.filter((todo) => {
+    if (filter === 'completed') return todo.completed
+    if (filter === 'incomplete') return !todo.completed
+    return true
+  })
+
   return (
     <section className="w-full px-4">
       <h2 className="font-extrabold text-4xl mb-6 text-center">لیست تودوها</h2>
       <div className="flex justify-center items-center">
         <ul className="w-full md:w-1/2 list-none">
-          {validTodos.map((todo) => (
+          {filteredTodos.map((todo) => (
             <Item key={`todo-${todo.id}`} todo={todo} />
           ))}
         </ul>

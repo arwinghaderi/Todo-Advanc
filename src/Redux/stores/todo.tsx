@@ -1,7 +1,7 @@
-import Swal from 'sweetalert2'
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { ApiError, Todo } from '../../types/todo'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
+import { ApiError, Todo, FilterType } from '../../types/todo'
 import { v4 as uuidv4 } from 'uuid'
+import Swal from 'sweetalert2'
 
 export const getTodos = createAsyncThunk<
   { todos: Todo[] },
@@ -57,13 +57,11 @@ export const removeTodo = createAsyncThunk<
 
   try {
     if (typeof window !== 'undefined') {
-      // حذف از customTodos
       const saved = localStorage.getItem('customTodos')
       const customTodos: Todo[] = saved ? JSON.parse(saved) : []
       const updated = customTodos.filter((t) => t.id !== todo.id)
       localStorage.setItem('customTodos', JSON.stringify(updated))
 
-      // ذخیره آی‌دی حذف‌شده برای DummyJSON
       if (todo.userId !== undefined && todo.userId !== 0) {
         const deleted = localStorage.getItem('deletedTodos')
         const deletedIds: string[] = deleted ? JSON.parse(deleted) : []
@@ -140,10 +138,7 @@ export const toggleTodo = createAsyncThunk<
       const saved = localStorage.getItem('customTodos')
       const customTodos: Todo[] = saved ? JSON.parse(saved) : []
 
-      // حذف نسخه قبلی از customTodos (اگه وجود داشت)
       const filtered = customTodos.filter((t) => t.id !== todo.id)
-
-      // اضافه کردن نسخه جدید
       const updated = [updatedTodo, ...filtered]
 
       localStorage.setItem('customTodos', JSON.stringify(updated))
@@ -155,29 +150,55 @@ export const toggleTodo = createAsyncThunk<
   }
 })
 
+export const filterTodos = createAsyncThunk<
+  Todo[],
+  FilterType,
+  { state: { todos: { todos: Todo[] } }; rejectValue: ApiError }
+>('todos/filterTodos', async (filter, { getState, rejectWithValue }) => {
+  try {
+    const allTodos = getState().todos.todos
+
+    const filtered = allTodos.filter((todo) => {
+      if (filter === 'completed') return todo.completed
+      if (filter === 'incomplete') return !todo.completed
+      return true
+    })
+
+    return filtered
+  } catch {
+    return rejectWithValue({ message: 'خطا در فیلتر کردن آیتم‌ها' })
+  }
+})
 
 interface TodoState {
   todos: Todo[]
+  filter: FilterType
 }
 
 const initialState: TodoState = {
   todos: [],
+  filter: 'all', // مقدار اولیه ثابت برای جلوگیری از mismatch
 }
 
 const todoSlice = createSlice({
   name: 'todos',
   initialState,
-  reducers: {},
+  reducers: {
+    setFilter(state, action: PayloadAction<FilterType>) {
+      state.filter = action.payload
+      if (
+        typeof window !== 'undefined' &&
+        ['all', 'completed', 'incomplete'].includes(action.payload)
+      ) {
+        localStorage.setItem('todoFilter', action.payload)
+      }
+    },
+  },
   extraReducers: (builder) => {
-    builder.addCase(toggleTodo.fulfilled, (state, action) => {
-      state.todos = state.todos.map((todo) =>
-        todo.id === action.payload.id ? action.payload : todo
-      )
-    })
-
     builder.addCase(getTodos.fulfilled, (state, action) => {
       state.todos = action.payload.todos
     })
+
     builder.addCase(addTodo.fulfilled, (state, action) => {
       state.todos.unshift(action.payload)
 
@@ -186,12 +207,30 @@ const todoSlice = createSlice({
       customTodos.unshift(action.payload)
       localStorage.setItem('customTodos', JSON.stringify(customTodos))
     })
+
     builder.addCase(removeTodo.fulfilled, (state, action) => {
       state.todos = state.todos.filter(
         (todo) => String(todo.id) !== action.payload
       )
     })
+
+    builder.addCase(toggleTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.map((todo) =>
+        todo.id === action.payload.id ? action.payload : todo
+      )
+
+      if (typeof window !== 'undefined' && action.payload.userId === 0) {
+        const saved = localStorage.getItem('customTodos')
+        const customTodos: Todo[] = saved ? JSON.parse(saved) : []
+
+        const filtered = customTodos.filter((t) => t.id !== action.payload.id)
+        const updated = [action.payload, ...filtered]
+
+        localStorage.setItem('customTodos', JSON.stringify(updated))
+      }
+    })
   },
 })
 
+export const { setFilter } = todoSlice.actions
 export default todoSlice.reducer
