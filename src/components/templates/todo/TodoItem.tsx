@@ -1,7 +1,7 @@
 import { FaCheckCircle, FaTrashAlt } from 'react-icons/fa'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '@/Redux/store'
-import { removeTodo } from '@/Redux/stores/todo'
+import { removeTodo, toggleTodo } from '@/Redux/stores/todo'
 import { Todo } from '@/types/todo'
 
 interface ItemProps {
@@ -13,6 +13,10 @@ export default function Item({ todo }: ItemProps) {
 
   const handleDelete = () => {
     dispatch(removeTodo(todo))
+  }
+
+  const handleToggle = () => {
+    dispatch(toggleTodo(todo))
   }
 
   return (
@@ -27,7 +31,12 @@ export default function Item({ todo }: ItemProps) {
           : 'تودو نامعتبر'}
       </span>
       <div className="flex gap-2">
-        <button className="bg-yellow-400 text-white px-4 py-2 rounded-full flex items-center justify-center">
+        <button
+          onClick={handleToggle}
+          className={`  cursor-pointer ${
+            todo.completed ? 'bg-green-600' : 'bg-yellow-400'
+          } text-white px-4 py-2 rounded-full flex items-center justify-center`}
+        >
           <FaCheckCircle className="text-xl pointer-events-none" />
         </button>
         <button

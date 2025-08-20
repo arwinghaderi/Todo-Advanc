@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { getTodos } from '@/Redux/stores/todo'
 import Item from './TodoItem'
 import { useMemo } from 'react'
-import { AppDispatch, RootState } from '../../../Redux/store'
+import { AppDispatch, RootState } from '@/Redux/store'
 import { Todo } from '@/types/todo'
 
 export default function List() {

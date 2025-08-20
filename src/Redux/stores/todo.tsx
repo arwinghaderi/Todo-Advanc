@@ -19,14 +19,15 @@ export const getTodos = createAsyncThunk<
         : null
     const deletedIds: string[] = deleted ? JSON.parse(deleted) : []
 
-    const dummyTodos = data.todos
-      .slice(0, 5)
-      .filter((todo: Todo) => !deletedIds.includes(String(todo.id)))
-
     const saved =
       typeof window !== 'undefined' ? localStorage.getItem('customTodos') : null
-
     const customTodos: Todo[] = saved ? JSON.parse(saved) : []
+
+    const dummyTodos = data.todos.slice(0, 5).filter((todo: Todo) => {
+      const isDeleted = deletedIds.includes(String(todo.id))
+      const isOverridden = customTodos.some((t) => t.id === todo.id)
+      return !isDeleted && !isOverridden
+    })
 
     return {
       todos: [...customTodos, ...dummyTodos],
@@ -35,8 +36,6 @@ export const getTodos = createAsyncThunk<
     return rejectWithValue({ message: 'خطای ناشناخته' })
   }
 })
-
-
 
 export const removeTodo = createAsyncThunk<
   string,
@@ -97,8 +96,6 @@ export const removeTodo = createAsyncThunk<
   }
 })
 
-
-
 export const addTodo = createAsyncThunk<
   Todo,
   { todo: string; completed?: boolean; userId?: number },
@@ -131,6 +128,34 @@ export const addTodo = createAsyncThunk<
   }
 })
 
+export const toggleTodo = createAsyncThunk<
+  Todo,
+  Todo,
+  { rejectValue: ApiError }
+>('todos/toggleTodo', async (todo, { rejectWithValue }) => {
+  try {
+    const updatedTodo = { ...todo, completed: !todo.completed }
+
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('customTodos')
+      const customTodos: Todo[] = saved ? JSON.parse(saved) : []
+
+      // حذف نسخه قبلی از customTodos (اگه وجود داشت)
+      const filtered = customTodos.filter((t) => t.id !== todo.id)
+
+      // اضافه کردن نسخه جدید
+      const updated = [updatedTodo, ...filtered]
+
+      localStorage.setItem('customTodos', JSON.stringify(updated))
+    }
+
+    return updatedTodo
+  } catch {
+    return rejectWithValue({ message: 'خطا در تغییر وضعیت آیتم' })
+  }
+})
+
+
 interface TodoState {
   todos: Todo[]
 }
@@ -144,6 +169,12 @@ const todoSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(toggleTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.map((todo) =>
+        todo.id === action.payload.id ? action.payload : todo
+      )
+    })
+
     builder.addCase(getTodos.fulfilled, (state, action) => {
       state.todos = action.payload.todos
     })
@@ -155,12 +186,11 @@ const todoSlice = createSlice({
       customTodos.unshift(action.payload)
       localStorage.setItem('customTodos', JSON.stringify(customTodos))
     })
-      builder.addCase(removeTodo.fulfilled, (state, action) => {
-        state.todos = state.todos.filter(
-          (todo) => String(todo.id) !== action.payload
-        )
-      })
-
+    builder.addCase(removeTodo.fulfilled, (state, action) => {
+      state.todos = state.todos.filter(
+        (todo) => String(todo.id) !== action.payload
+      )
+    })
   },
 })
 
