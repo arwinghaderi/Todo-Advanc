@@ -3,7 +3,6 @@ import {
   DummyLoginResponse,
   LoginPayload,
   DummyErrorResponse,
-  RegisterPayload,
 } from '@/types/auth'
 import { User } from '@/types/module'
 
@@ -28,43 +27,6 @@ export const userLogin = createAsyncThunk<
       return rejectWithValue(data)
     }
 
-    return data
-  } catch {
-    return rejectWithValue({ message: 'خطای ناشناخته', status: 500 })
-  }
-})
-
-export const userRegister = createAsyncThunk<
-  DummyLoginResponse,
-  RegisterPayload,
-  { rejectValue: DummyErrorResponse }
->('user/userRegister', async (payload, { rejectWithValue }) => {
-  try {
-    console.log('payload', payload)
-    const response = await fetch(
-      `https://xxxx.backendless.app/api/users/register`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': 'reqres-free-v1',
-        },
-        body: JSON.stringify({
-          email: payload.email,
-          password: payload.password,
-          usename: payload.username,
-        }),
-      }
-    )
-
-    console.log(response, 'response')
-
-    if (!response.ok) {
-      const errorData: DummyErrorResponse = await response.json()
-      return rejectWithValue(errorData)
-    }
-
-    const data: DummyLoginResponse = await response.json()
     return data
   } catch {
     return rejectWithValue({ message: 'خطای ناشناخته', status: 500 })
@@ -112,13 +74,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
-      state.user = action.payload
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('user', JSON.stringify(action.payload))
-      }
-    })
-
-    builder.addCase(userRegister.fulfilled, (state, action) => {
       state.user = action.payload
       if (typeof window !== 'undefined') {
         localStorage.setItem('user', JSON.stringify(action.payload))

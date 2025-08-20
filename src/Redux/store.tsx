@@ -2,11 +2,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { createWrapper } from 'next-redux-wrapper'
 import userReducer from './stores/user'
+import todReducer from './stores/todo'
 
 export const makeStore = () =>
   configureStore({
     reducer: {
       user: userReducer,
+      todos: todReducer,
     },
   })
 
