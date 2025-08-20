@@ -22,11 +22,11 @@ export default function CustomSelect() {
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="appearance-none bg-white text-yellow-400 px-4 py-2 rounded-full w-full text-right flex justify-between items-center relative"
+        className="appearance-none bg-white text-yellow-400 px-4 py-2  rounded-xl w-full text-right flex justify-between items-center relative"
       >
         <span className="flex-1 text-right  font-bold pr-4">{selected.label}</span>
 
-        <div className="absolute inset-y-0 left-0 w-10 bg-yellow-400 rounded-l-full flex items-center justify-center pointer-events-none">
+        <div className="absolute inset-y-0 left-0 w-10 bg-yellow-400 rounded-l-xl flex items-center justify-center pointer-events-none">
           <FaChevronDown
             className={`text-white text-sm transition-transform duration-300 ${
               open ? 'rotate-180' : 'rotate-0'

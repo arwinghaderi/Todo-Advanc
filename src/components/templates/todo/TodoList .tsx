@@ -1,10 +1,11 @@
 'use client'
+
+import { useSelector, useDispatch } from 'react-redux'
 import { useQuery } from '@tanstack/react-query'
 import { getTodos } from '@/Redux/stores/todo'
 import Item from './TodoItem'
 import { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
-import { AppDispatch } from '../../../Redux/store'
+import { AppDispatch, RootState } from '../../../Redux/store'
 
 export default function List() {
   const dispatch = useDispatch<AppDispatch>()
@@ -28,21 +29,27 @@ export default function List() {
     }
   }, [dispatch])
 
-  const { data, isLoading, error } = useQuery({
+  const { isLoading, error } = useQuery({
     queryKey: ['todos'],
     queryFn,
   })
+
+  const todos = useSelector((state: RootState) => state.todos.todos)
 
   if (isLoading) return <p>در حال دریافت...</p>
   if (error) return <p>خطا در دریافت داده‌ها</p>
 
   return (
     <>
-      <h2 className=' font-extrabold text-4xl'> لیست تودو ها</h2>
+      <h2 className="font-extrabold text-4xl">لیست تودوها</h2>
       <div className="flex justify-center w-2/3 items-center px-4">
         <ul className="w-full md:w-1/2 list-none">
-          {data?.todos.slice(0, 5).map((todo) => (
-            <Item key={todo.id} text={todo.todo} completed={todo.completed} />
+          {todos.map((todo) => (
+            <Item
+              key={`todo-${todo.id}-${todo.userId ?? 'custom'}`}
+              text={todo.todo}
+              completed={todo.completed}
+            />
           ))}
         </ul>
       </div>

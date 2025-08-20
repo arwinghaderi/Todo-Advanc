@@ -1,22 +1,80 @@
+'use client'
+
 import { FaPlusCircle } from 'react-icons/fa'
 import Input from '../../module/Input'
 import CustomSelect from './CustomSelect'
+import Button from '../../module/Button'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { TodoPayload } from '../../../lib/Zod/types'
+import { todoSchema } from '../../../lib/Zod/schemas/todo'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '@/Redux/store'
+import { addTodo } from '@/Redux/stores/todo'
 
 export default function Form() {
+  const dispatch = useDispatch<AppDispatch>()
+  const queryClient = useQueryClient()
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<TodoPayload>({
+    resolver: zodResolver(todoSchema),
+  })
+
+  const mutation = useMutation({
+    mutationFn: async (data: TodoPayload) => {
+      const result = await dispatch(addTodo({ todo: data.todo }))
+      if (addTodo.fulfilled.match(result)) return result.payload
+      throw new Error(
+        typeof result.payload === 'object' &&
+        result.payload !== null &&
+        'message' in result.payload
+          ? (result.payload as { message: string }).message
+          : 'خطا در افزودن تسک'
+      )
+    },
+    onSuccess: (newTodo) => {
+      queryClient.setQueryData(['todos'], (old: any) => {
+        if (!old || !('todos' in old)) return old
+        return {
+          ...old,
+          todos: [newTodo, ...old.todos],
+          total: old.total + 1,
+        }
+      })
+      reset()
+    },
+  })
+
+  const onSubmit = (data: TodoPayload) => {
+    mutation.mutate(data)
+  }
+
   return (
-    <form className="flex flex-col md:flex-row items-center justify-center gap-4 px-4 w-full">
-      <div className="w-full md:w-[20rem]">
-        <Input placeholder="«افزودن مورد جدید به لیست…»" />
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col md:flex-row items-start justify-center gap-4 px-4 w-full"
+    >
+      <div className="w-full md:w-[20rem] min-h-[5.5rem] flex items-start">
+        <Input
+          placeholder="«افزودن مورد جدید به لیست…»"
+          {...register('todo')}
+          error={errors.todo?.message}
+        />
       </div>
 
-      <button
+      <Button
         type="submit"
-        className="bg-white text-yellow-400 hover:bg-yellow-400 hover:text-white transition-all px-2 py-2 rounded-full flex items-center justify-evenly gap-2 w-full md:w-[10rem]"
-        disabled
-      >
-        <FaPlusCircle className=" w-6 h-6 pointer-events-none" />
-        <span className="text-xl font-bold ">افزودن</span>
-      </button>
+        icon={<FaPlusCircle className="w-6 h-6 pointer-events-none" />}
+        text="افزودن"
+        className="bg-white  cursor-pointer text-yellow-400 hover:bg-yellow-400 hover:text-white transition-all  rounded-full flex items-center justify-evenly gap-2 w-full md:w-[10rem]"
+        loading={mutation.isPending}
+      />
 
       <CustomSelect />
     </form>

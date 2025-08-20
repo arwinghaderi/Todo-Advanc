@@ -12,7 +12,7 @@ export default function Item({ text, completed }: ItemProps) {
         completed ? 'line-through opacity-60' : ''
       }`}
     >
-      <span className="flex-1 text-right">{text.slice(0,50)}...</span>
+      <span className="flex-1 text-right">{text.slice(0, 50)}...</span>
       <div className="flex gap-2">
         <button className="bg-yellow-400 text-white px-4 py-2 rounded-full flex items-center justify-center">
           <FaCheckCircle className="text-xl pointer-events-none" />
