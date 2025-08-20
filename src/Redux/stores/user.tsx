@@ -15,16 +15,19 @@ export const userLogin = createAsyncThunk<
     const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: payload.username,
-        password: payload.password,
-      }),
+      body: JSON.stringify(payload),
     })
 
     const data = await response.json()
 
     if (!response.ok) {
       return rejectWithValue(data)
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('accessToken', data.token)
+      localStorage.setItem('user', JSON.stringify(data))
+      document.cookie = `accessToken=${data.token}; path=/; max-age=3600`
     }
 
     return data
@@ -56,6 +59,34 @@ export const fetchUserWithToken = createAsyncThunk<
   }
 })
 
+export const userLogout = createAsyncThunk<
+  void,
+  void,
+  { rejectValue: DummyErrorResponse }
+>('user/userLogout', async (_, { rejectWithValue }) => {
+  try {
+    const res = await fetch('/api/auth/logout', {
+      method: 'POST',
+    })
+
+    if (!res.ok) {
+      const data = await res.json()
+      return rejectWithValue(data)
+    }
+
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('user')
+      document.cookie =
+        'accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    }
+
+    return
+  } catch {
+    return rejectWithValue({ message: 'خطا در خروج از حساب', status: 500 })
+  }
+})
+
 interface AuthState {
   user: User | null
 }
@@ -75,12 +106,12 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.user = action.payload
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('user', JSON.stringify(action.payload))
-      }
     })
     builder.addCase(fetchUserWithToken.fulfilled, (state, action) => {
       state.user = action.payload
+    })
+    builder.addCase(userLogout.fulfilled, (state) => {
+      state.user = null
     })
   },
 })

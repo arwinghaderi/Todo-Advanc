@@ -2,10 +2,18 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { FaUserCircle, FaTasks, FaPlusCircle } from 'react-icons/fa'
+import {
+  FaUserCircle,
+  FaTasks,
+  FaPlusCircle,
+  FaSignOutAlt,
+} from 'react-icons/fa'
 import { IoCloseCircleOutline } from 'react-icons/io5'
-import { useSelector } from 'react-redux'
-import { RootState } from '@/Redux/store'
+import { useSelector, useDispatch } from 'react-redux'
+import { RootState, AppDispatch } from '@/Redux/store'
+import { userLogout } from '@/Redux/stores/user'
+import { useRouter } from 'next/navigation'
+import { useMutation } from '@tanstack/react-query'
 
 const sections = ['hero', 'about', 'features']
 
@@ -15,6 +23,21 @@ export default function NavBar() {
   const [scrolled, setScrolled] = useState(false)
 
   const user = useSelector((state: RootState) => state.user.user)
+  const dispatch = useDispatch<AppDispatch>()
+  const router = useRouter()
+
+  const logoutMutation = useMutation({
+    mutationFn: async () => {
+      await dispatch(userLogout()).unwrap()
+    },
+    onSuccess: () => {
+      router.push('/auth/sign-in')
+    },
+  })
+
+  const handleLogout = () => {
+    logoutMutation.mutate()
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -100,9 +123,18 @@ export default function NavBar() {
             </li>
             <li>
               {user ? (
-                <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
-                  <FaUserCircle className="text-xl" />
-                  <span>{user.username}</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
+                    <FaUserCircle className="text-xl" />
+                    <span>{user.username}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="flex cursor-pointer items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
+                  >
+                    <FaSignOutAlt className="text-xl" />
+                    خروج
+                  </button>
                 </div>
               ) : (
                 <Link
@@ -139,9 +171,21 @@ export default function NavBar() {
       >
         <div className="flex justify-between items-center px-4 py-4 border-b">
           {user ? (
-            <div className="flex items-center gap-2 text-indigo-700 font-semibold text-sm">
-              <FaUserCircle className="text-xl" />
-              <span>{user.username}</span>
+            <div className="flex flex-col gap-2 text-indigo-700 font-semibold text-sm">
+              <div className="flex items-center gap-2">
+                <FaUserCircle className="text-xl" />
+                <span>{user.username}</span>
+              </div>
+              <button
+                onClick={() => {
+                  setIsOpen(false)
+                  handleLogout()
+                }}
+                className="flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
+              >
+                <FaSignOutAlt className="text-xl" />
+                خروج از حساب
+              </button>
             </div>
           ) : (
             <Link
