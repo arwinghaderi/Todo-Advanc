@@ -6,6 +6,7 @@ import { getTodos } from '@/Redux/stores/todo'
 import Item from './TodoItem'
 import { useMemo } from 'react'
 import { AppDispatch, RootState } from '../../../Redux/store'
+import { Todo } from '@/types/todo'
 
 export default function List() {
   const dispatch = useDispatch<AppDispatch>()
@@ -39,20 +40,23 @@ export default function List() {
   if (isLoading) return <p>در حال دریافت...</p>
   if (error) return <p>خطا در دریافت داده‌ها</p>
 
+  const validTodos = Array.isArray(todos)
+    ? todos.filter(
+        (todo): todo is Todo =>
+          typeof todo?.todo === 'string' && typeof todo?.id !== 'undefined'
+      )
+    : []
+
   return (
-    <>
-      <h2 className="font-extrabold text-4xl">لیست تودوها</h2>
-      <div className="flex justify-center w-2/3 items-center px-4">
+    <section className="w-full px-4">
+      <h2 className="font-extrabold text-4xl mb-6 text-center">لیست تودوها</h2>
+      <div className="flex justify-center items-center">
         <ul className="w-full md:w-1/2 list-none">
-          {todos.map((todo) => (
-            <Item
-              key={`todo-${todo.id}-${todo.userId ?? 'custom'}`}
-              text={todo.todo}
-              completed={todo.completed}
-            />
+          {validTodos.map((todo) => (
+            <Item key={`todo-${todo.id}`} todo={todo} />
           ))}
         </ul>
       </div>
-    </>
+    </section>
   )
 }
