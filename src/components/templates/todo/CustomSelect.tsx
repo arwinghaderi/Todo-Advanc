@@ -32,11 +32,11 @@ export default function CustomSelect() {
   }
 
   return (
-    <div className="relative w-full md:w-[10rem]">
+    <div className="relative w-full md:w-[10rem]  ">
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className="appearance-none bg-white text-yellow-400 px-4 py-2 rounded-xl w-full text-right flex justify-between items-center relative"
+        className="appearance-none   cursor-pointer bg-white text-yellow-400 px-4 py-2 rounded-xl w-full text-right flex justify-between items-center relative"
       >
         <span className="flex-1 text-right font-bold pr-4">
           {selected.label}

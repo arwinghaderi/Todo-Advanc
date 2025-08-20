@@ -4,6 +4,9 @@ import Footer from '@/components/module/Footer'
 import AboutSection from '@/components/module/AboutSection'
 import FeaturesSection from '@/components/module/FeaturesSection'
 import TypewriterText from '@/components/module/TypewriterText'
+import { FaPlusCircle } from 'react-icons/fa'
+
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -33,12 +36,17 @@ export default function Home() {
           <p className="text-lg md:text-xl mb-8 leading-relaxed drop-shadow font-medium">
             <TypewriterText />
           </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button className="bg-white cursor-pointer text-indigo-600 px-6 py-3 rounded-full font-semibold shadow-md hover:bg-gray-100 transition w-full sm:w-auto">
-              مشاهده نسخه‌ی دمو
-            </button>
-          </div>
+          <li className=" flex  items-center justify-center ">
+            <Link
+              href="/todo"
+              className="flex items-center justify-around w-1/2 gap-2 bg-yellow-400 text-indigo-800  py-4 text-3xl  rounded-full hover:bg-yellow-300 transition   font-extrabold "
+            >
+              <div className=' flex items-center justify-center gap-x-4 '>
+                <FaPlusCircle className=" w-7 h-8 " />
+                ثبت تودو
+              </div>
+            </Link>
+          </li>
         </div>
       </header>
 

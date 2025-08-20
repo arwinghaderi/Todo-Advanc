@@ -13,10 +13,11 @@ import { userLogin } from '@/Redux/stores/user'
 import { useMutation } from '@tanstack/react-query'
 import ToastNotification from '@/lib/toastify/toastify'
 import { useRouter } from 'next/navigation'
+import { FaUser, FaLock } from 'react-icons/fa'
 
 export default function LoginForm() {
   const dispatch = useDispatch<AppDispatch>()
-  // const router = useRouter()
+  const router = useRouter()
 
   const {
     register,
@@ -38,7 +39,7 @@ export default function LoginForm() {
     },
     onSuccess: (result) => {
       ToastNotification('success', `خوش آمدی ${result.username} 👋`, 5000)
-      // router.push('/dashboard')
+      router.push('/')
     },
     onError: (err: any) => {
       ToastNotification(
@@ -55,9 +56,18 @@ export default function LoginForm() {
 
   return (
     <div className="max-w-md w-full bg-white/10 backdrop-blur-md rounded-2xl shadow-xl p-8 text-white">
-      <h1 className="text-3xl font-extrabold mb-6 text-center drop-shadow">
+      <h1 className="text-3xl font-extrabold mb-4 text-center drop-shadow">
         ورود به TodoMaster
       </h1>
+
+      <p className="text-base text-center  text-yellow-300 font-bold mb-6">
+        برای ثبت تودو ابتدا باید وارد حساب کاربری شوید. <br />
+        برای تست می‌توانید از اطلاعات زیر استفاده کنید:
+        <br />
+        <span className="text-white font-bold">نام کاربری:</span> emilys
+        <br />
+        <span className="text-white font-bold">رمز عبور:</span> emilyspass
+      </p>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <Input
@@ -65,6 +75,7 @@ export default function LoginForm() {
           type="text"
           label="نام کاربری"
           placeholder="emilys"
+          icon={<FaUser />}
           {...register('username')}
           error={errors.username?.message}
           disabled={mutation.isPending}
@@ -74,6 +85,7 @@ export default function LoginForm() {
           type="password"
           label="رمز عبور"
           placeholder="••••••••"
+          icon={<FaLock />}
           {...register('password')}
           error={errors.password?.message}
           disabled={mutation.isPending}
@@ -93,15 +105,7 @@ export default function LoginForm() {
         />
       </form>
 
-      <p className="mt-6 text-center text-sm text-gray-200">
-        حساب کاربری نداری؟{' '}
-        <Link
-          href="/auth/sign-up"
-          className="text-yellow-300 font-semibold hover:underline"
-        >
-          ثبت‌نام کن
-        </Link>
-      </p>
+  
     </div>
   )
 }

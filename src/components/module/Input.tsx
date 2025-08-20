@@ -23,21 +23,25 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           </label>
         )}
 
-        <div className={`relative flex items-center gap-2`}>
-          {icon && <span className="text-xl text-white">{icon}</span>}
-
+        <div className="relative">
           <input
             ref={ref}
             placeholder={placeholder}
-            className={`w-full px-4 py-2 rounded-lg bg-white text-black placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 ${
+            className={`w-full px-4 py-2 pr-10 rounded-lg bg-white text-black placeholder:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 ${
               error ? 'border border-red-600' : ''
             } ${className || ''}`}
             {...rest}
           />
+
+          {icon && (
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-lg pointer-events-none">
+              {icon}
+            </span>
+          )}
         </div>
 
         {error && (
-          <span className="mt-2 block  font-extrabold text-sm text-red-800 ">
+          <span className="mt-2 block font-extrabold text-sm text-red-800">
             {error}
           </span>
         )}

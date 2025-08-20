@@ -21,7 +21,7 @@
 
 html {
   scroll-behavior: smooth;
-    direction: rtl;
+  direction: rtl;
 }
 
 body {
@@ -31,4 +31,24 @@ body {
   direction: rtl;
   font-size: 16px;
   font-weight: 500;
+}
+::-webkit-scrollbar {
+  width: 36px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #9333ea;
+  border-radius: 9999px;
+  border: 12px solid transparent;
+  background-clip: content-box;
+}
+
+* {
+  scrollbar-width: auto;
+  scrollbar-color: #9333ea transparent;
 }

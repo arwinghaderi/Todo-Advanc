@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { FaUserCircle, FaTasks } from 'react-icons/fa'
+import { FaUserCircle, FaTasks, FaPlusCircle } from 'react-icons/fa'
 import { IoCloseCircleOutline } from 'react-icons/io5'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/Redux/store'
@@ -88,6 +88,15 @@ export default function NavBar() {
               >
                 امکانات کلیدی
               </a>
+            </li>
+            <li>
+              <Link
+                href="/todo"
+                className="flex items-center gap-2 bg-yellow-400 text-indigo-800 px-4 py-2 rounded-full hover:bg-yellow-300 transition font-semibold text-sm"
+              >
+                <FaPlusCircle className="text-xl" />
+                ثبت تودو
+              </Link>
             </li>
             <li>
               {user ? (
@@ -177,6 +186,16 @@ export default function NavBar() {
             >
               امکانات کلیدی
             </a>
+          </li>
+          <li>
+            <Link
+              href="/todo"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2 bg-yellow-400 text-indigo-800 px-3 py-2 rounded-full text-sm font-semibold hover:bg-yellow-300 transition"
+            >
+              <FaPlusCircle className="text-xl" />
+              ثبت تودو
+            </Link>
           </li>
         </ul>
       </div>
