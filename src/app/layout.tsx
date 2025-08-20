@@ -4,6 +4,13 @@ import { makeStore } from '@/Redux/store'
 import { fetchUserWithToken } from '@/Redux/stores/user'
 import Providers from './Providers'
 import './globals.css'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'ثبت تودو ',
+  description: 'در این صفحه می‌توانید وظایف جدید خود را ثبت و مدیریت کنید.',
+}
+
 
 export default async function RootLayout({
   children,

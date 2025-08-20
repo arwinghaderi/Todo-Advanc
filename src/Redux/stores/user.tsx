@@ -89,11 +89,14 @@ export const userLogout = createAsyncThunk<
 
 interface AuthState {
   user: User | null
+  isUserLoaded: boolean
 }
 
 const initialState: AuthState = {
   user: null,
+  isUserLoaded: false,
 }
+
 
 const authSlice = createSlice({
   name: 'auth',
@@ -101,17 +104,25 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload
+      state.isUserLoaded = true
     },
   },
   extraReducers: (builder) => {
     builder.addCase(userLogin.fulfilled, (state, action) => {
       state.user = action.payload
+      state.isUserLoaded = true
     })
     builder.addCase(fetchUserWithToken.fulfilled, (state, action) => {
       state.user = action.payload
+      state.isUserLoaded = true
+    })
+    builder.addCase(fetchUserWithToken.rejected, (state) => {
+      state.user = null
+      state.isUserLoaded = true
     })
     builder.addCase(userLogout.fulfilled, (state) => {
       state.user = null
+      state.isUserLoaded = true
     })
   },
 })

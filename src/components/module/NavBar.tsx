@@ -14,6 +14,7 @@ import { RootState, AppDispatch } from '@/Redux/store'
 import { userLogout } from '@/Redux/stores/user'
 import { useRouter } from 'next/navigation'
 import { useMutation } from '@tanstack/react-query'
+import { ClipLoader } from 'react-spinners'
 
 const sections = ['hero', 'about', 'features']
 
@@ -22,7 +23,7 @@ export default function NavBar() {
   const [activeSection, setActiveSection] = useState('')
   const [scrolled, setScrolled] = useState(false)
 
-  const user = useSelector((state: RootState) => state.user.user)
+  const { user, isUserLoaded } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch<AppDispatch>()
   const router = useRouter()
 
@@ -121,31 +122,36 @@ export default function NavBar() {
                 ثبت تودو
               </Link>
             </li>
-            <li>
-              {user ? (
-                <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
-                    <FaUserCircle className="text-xl" />
-                    <span>{user.username}</span>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="flex cursor-pointer items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
-                  >
-                    <FaSignOutAlt className="text-xl" />
-                    خروج
-                  </button>
-                </div>
-              ) : (
-                <Link
-                  href="/auth/sign-in"
-                  className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition font-semibold text-sm"
-                >
+            {!isUserLoaded ? (
+              <div className="flex items-center gap-2 px-4 py-2">
+                <ClipLoader color="#6366f1" size={24} />
+                <span className="text-sm text-white font-semibold">
+                  در حال بررسی...
+                </span>
+              </div>
+            ) : user ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
                   <FaUserCircle className="text-xl" />
-                  ورود / ثبت‌نام
-                </Link>
-              )}
-            </li>
+                  <span>{user.username}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex cursor-pointer items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
+                >
+                  <FaSignOutAlt className="text-xl" />
+                  خروج
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/auth/sign-in"
+                className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition font-semibold text-sm"
+              >
+                <FaUserCircle className="text-xl" />
+                ورود / ثبت‌نام
+              </Link>
+            )}
           </ul>
 
           <button
