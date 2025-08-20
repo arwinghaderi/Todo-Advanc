@@ -12,16 +12,13 @@ export const userLogin = createAsyncThunk<
   LoginPayload,
   { rejectValue: DummyErrorResponse }
 >('user/userLogin', async (payload, { rejectWithValue }) => {
-  console.log('payload', payload)
   try {
-    const response = await fetch('https://dummyjson.com/auth/login', {
+    const response = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      // credentials: 'include',
       body: JSON.stringify({
         username: payload.username,
         password: payload.password,
-        expiresInMins: 30,
       }),
     })
 
@@ -74,6 +71,29 @@ export const userRegister = createAsyncThunk<
   }
 })
 
+export const fetchUserWithToken = createAsyncThunk<
+  User,
+  string,
+  { rejectValue: DummyErrorResponse }
+>('user/fetchUserWithToken', async (token, { rejectWithValue }) => {
+  try {
+    const res = await fetch('https://dummyjson.com/auth/me', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      credentials: 'include',
+      cache: 'no-store',
+    })
+
+    const data = await res.json()
+    if (!res.ok) return rejectWithValue(data)
+    return data
+  } catch {
+    return rejectWithValue({ message: 'خطای ناشناخته', status: 500 })
+  }
+})
+
 interface AuthState {
   user: User | null
 }
@@ -103,6 +123,9 @@ const authSlice = createSlice({
       if (typeof window !== 'undefined') {
         localStorage.setItem('user', JSON.stringify(action.payload))
       }
+    })
+    builder.addCase(fetchUserWithToken.fulfilled, (state, action) => {
+      state.user = action.payload
     })
   },
 })

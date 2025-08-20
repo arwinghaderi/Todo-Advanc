@@ -5,7 +5,9 @@ export type DummyLoginResponse = {
   firstName: string
   lastName: string
   image: string
+  gender: string
   accessToken: string
+  refreshToken: string
 }
 
 export type LoginPayload = {

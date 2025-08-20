@@ -16,7 +16,7 @@ import { useRouter } from 'next/navigation'
 
 export default function LoginForm() {
   const dispatch = useDispatch<AppDispatch>()
-  const router = useRouter()
+  // const router = useRouter()
 
   const {
     register,
@@ -38,7 +38,7 @@ export default function LoginForm() {
     },
     onSuccess: (result) => {
       ToastNotification('success', `خوش آمدی ${result.username} 👋`, 5000)
-      router.push('/dashboard') // مسیر دلخواه بعد از ورود موفق
+      // router.push('/dashboard')
     },
     onError: (err: any) => {
       ToastNotification(

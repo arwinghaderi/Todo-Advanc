@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { FaUserCircle, FaTasks } from 'react-icons/fa'
 import { IoCloseCircleOutline } from 'react-icons/io5'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/Redux/store'
 
 const sections = ['hero', 'about', 'features']
 
@@ -11,6 +13,8 @@ export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('')
   const [scrolled, setScrolled] = useState(false)
+
+  const user = useSelector((state: RootState) => state.user.user)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -86,13 +90,20 @@ export default function NavBar() {
               </a>
             </li>
             <li>
-              <Link
-                href="/auth/sign-in"
-                className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition font-semibold text-sm"
-              >
-                <FaUserCircle className="text-xl" />
-                ورود / ثبت‌نام
-              </Link>
+              {user ? (
+                <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
+                  <FaUserCircle className="text-xl" />
+                  <span>{user.username}</span>
+                </div>
+              ) : (
+                <Link
+                  href="/auth/sign-in"
+                  className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition font-semibold text-sm"
+                >
+                  <FaUserCircle className="text-xl" />
+                  ورود / ثبت‌نام
+                </Link>
+              )}
             </li>
           </ul>
 
@@ -113,19 +124,26 @@ export default function NavBar() {
 
       {/* Mobile Menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-64   border-l-indigo-600 border-4 rounded-2xl bg-white z-[1000] shadow-lg transform transition-transform duration-500 ${
+        className={`fixed top-0 right-0 h-full w-64 border-l-indigo-600 border-4 rounded-2xl bg-white z-[1000] shadow-lg transform transition-transform duration-500 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         <div className="flex justify-between items-center px-4 py-4 border-b">
-          <Link
-            href="/auth/sign-in"
-            className="flex items-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition"
-            onClick={() => setIsOpen(false)}
-          >
-            <FaUserCircle className="text-xl" />
-            ورود / ثبت‌نام
-          </Link>
+          {user ? (
+            <div className="flex items-center gap-2 text-indigo-700 font-semibold text-sm">
+              <FaUserCircle className="text-xl" />
+              <span>{user.username}</span>
+            </div>
+          ) : (
+            <Link
+              href="/auth/sign-in"
+              className="flex items-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition"
+              onClick={() => setIsOpen(false)}
+            >
+              <FaUserCircle className="text-xl" />
+              ورود / ثبت‌نام
+            </Link>
+          )}
 
           <IoCloseCircleOutline
             className="text-indigo-600 text-3xl cursor-pointer hover:text-indigo-800 transition"

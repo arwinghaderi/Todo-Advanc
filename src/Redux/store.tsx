@@ -1,11 +1,16 @@
+// redux/store.ts
 import { configureStore } from '@reduxjs/toolkit'
-import userReducer from '@/Redux/stores/user'
+import { createWrapper } from 'next-redux-wrapper'
+import userReducer from './stores/user'
 
-export const store = configureStore({
-  reducer: {
-    user: userReducer,
-  },
-})
+export const makeStore = () =>
+  configureStore({
+    reducer: {
+      user: userReducer,
+    },
+  })
 
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
+export const store = makeStore()
+export type AppStore = ReturnType<typeof makeStore>
+export type RootState = ReturnType<AppStore['getState']>
+export type AppDispatch = AppStore['dispatch']
