@@ -193,7 +193,16 @@ const todoSlice = createSlice({
         localStorage.setItem('todoFilter', action.payload)
       }
     },
+
+    reorderTodos(state, action: PayloadAction<Todo[]>) {
+      state.todos = action.payload
+
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('customTodos', JSON.stringify(action.payload))
+      }
+    },
   },
+
   extraReducers: (builder) => {
     builder.addCase(getTodos.fulfilled, (state, action) => {
       state.todos = action.payload.todos
@@ -232,5 +241,5 @@ const todoSlice = createSlice({
   },
 })
 
-export const { setFilter } = todoSlice.actions
+export const { setFilter, reorderTodos } = todoSlice.actions
 export default todoSlice.reducer

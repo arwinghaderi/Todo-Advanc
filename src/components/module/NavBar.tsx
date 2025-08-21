@@ -129,7 +129,7 @@ export default function NavBar() {
             TodoMaster
           </Link>
 
-          <ul className="hidden md:flex items-center gap-8 text-lg font-medium">
+          <ul className="hidden lg:flex items-center gap-8 text-lg font-medium">
             <li>
               <a
                 href="#about"
@@ -167,7 +167,9 @@ export default function NavBar() {
           </ul>
 
           <button
-            className="md:hidden text-2xl transition-transform duration-300 text-white hover:text-yellow-300"
+            className={`md:hidden text-2xl transition-transform duration-300 ${
+              scrolled ? 'text-black' : 'text-white'
+            } hover:text-yellow-300`}
             onClick={() => setIsOpen((prev) => !prev)}
           >
             <span
@@ -187,8 +189,7 @@ export default function NavBar() {
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex justify-between items-center px-4 py-4 border-b">
-          {renderAuthSection()}
+        <div className="flex justify-between items-center px-4  pt-4 border-b">
           <IoCloseCircleOutline
             className="text-indigo-600 text-3xl cursor-pointer hover:text-indigo-800 transition"
             onClick={() => setIsOpen(false)}
@@ -231,6 +232,7 @@ export default function NavBar() {
               <FaPlusCircle className="text-xl" />
               ثبت تودو
             </Link>
+            <div className=' my-6 '>{renderAuthSection()}</div>
           </li>
         </ul>
       </div>
