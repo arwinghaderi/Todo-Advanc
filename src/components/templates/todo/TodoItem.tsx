@@ -52,7 +52,7 @@ export default function Item({ todo, dragHandleProps }: ItemProps) {
 
         <span
           {...dragHandleProps}
-          className="cursor-grab active:cursor-grabbing px-2 text-indigo-600 text-xl"
+          className="cursor-grab active:cursor-grabbing px-3 py-2 text-indigo-600 text-xl"
           title="برای جابجایی بکشید"
         >
           ⠿

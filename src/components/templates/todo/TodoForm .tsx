@@ -12,6 +12,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '@/Redux/store'
 import { addTodo } from '@/Redux/stores/todo'
+import { FaClipboardList } from 'react-icons/fa'
+
 
 export default function Form() {
   const dispatch = useDispatch<AppDispatch>()
@@ -65,6 +67,8 @@ export default function Form() {
           placeholder="«افزودن مورد جدید به لیست…»"
           {...register('todo')}
           error={errors.todo?.message}
+          icon={<FaClipboardList />} 
+          className="pr-10" 
         />
       </div>
 

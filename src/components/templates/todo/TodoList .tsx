@@ -1,10 +1,11 @@
 'use client'
 
 import {
-  DndContext,
-  closestCenter,
   PointerSensor,
+  TouchSensor,
   useSensor,
+  closestCenter,
+  DndContext,
   useSensors,
 } from '@dnd-kit/core'
 import {
@@ -41,8 +42,7 @@ export default function List() {
     queryFn,
   })
 
-  const sensors = useSensors(useSensor(PointerSensor))
-
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor))
   const validTodos = Array.isArray(todos)
     ? todos.filter(
         (todo): todo is Todo =>
