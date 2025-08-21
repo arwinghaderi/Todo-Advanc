@@ -1,14 +1,17 @@
 // app/layout.tsx
 import { cookies } from 'next/headers'
 import { makeStore } from '@/Redux/store'
-import { fetchUserWithToken,setUser } from '@/Redux/stores/user'
+import { fetchUserWithToken, setUser } from '@/Redux/stores/user'
 import Providers from './Providers'
 import './globals.css'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'ثبت تودو ',
+  title: ' TodoMaster ',
   description: 'در این صفحه می‌توانید وظایف جدید خود را ثبت و مدیریت کنید.',
+  icons: {
+    icon: [{ url: '/images.png', sizes: '64x64', type: 'image/png' }],
+  },
 }
 
 export default async function RootLayout({
@@ -27,7 +30,7 @@ export default async function RootLayout({
     const state = store.getState()
     initialUser = state.user.user
   } else {
-    store.dispatch(setUser(null)) 
+    store.dispatch(setUser(null))
   }
 
   return (
