@@ -46,7 +46,7 @@ function HydrateUser({ user }: { user: User | null }) {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    if (user) dispatch(setUser(user))
+    dispatch(setUser(user)) 
   }, [user])
 
   return null

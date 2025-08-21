@@ -70,6 +70,47 @@ export default function NavBar() {
 
   const showHighlight = activeSection !== 'hero'
 
+  const renderAuthSection = () => {
+    if (!isUserLoaded) {
+      return (
+        <div className="flex items-center gap-2 px-4 py-2">
+          <ClipLoader color="#ffffff" size={24} />
+          <span className="text-sm text-white font-semibold">
+            در حال بررسی...
+          </span>
+        </div>
+      )
+    }
+
+    if (user) {
+      return (
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
+            <FaUserCircle className="text-xl" />
+            <span>{user.username}</span>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex cursor-pointer items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
+          >
+            <FaSignOutAlt className="text-xl" />
+            خروج
+          </button>
+        </div>
+      )
+    }
+
+    return (
+      <Link
+        href="/auth/sign-in"
+        className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition font-semibold text-sm"
+      >
+        <FaUserCircle className="text-xl" />
+        ورود / ثبت‌نام
+      </Link>
+    )
+  }
+
   return (
     <>
       <nav
@@ -122,36 +163,7 @@ export default function NavBar() {
                 ثبت تودو
               </Link>
             </li>
-            {!isUserLoaded ? (
-              <div className="flex items-center gap-2 px-4 py-2">
-                <ClipLoader color="#6366f1" size={24} />
-                <span className="text-sm text-white font-semibold">
-                  در حال بررسی...
-                </span>
-              </div>
-            ) : user ? (
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full font-semibold text-sm">
-                  <FaUserCircle className="text-xl" />
-                  <span>{user.username}</span>
-                </div>
-                <button
-                  onClick={handleLogout}
-                  className="flex cursor-pointer items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
-                >
-                  <FaSignOutAlt className="text-xl" />
-                  خروج
-                </button>
-              </div>
-            ) : (
-              <Link
-                href="/auth/sign-in"
-                className="flex items-center gap-2 bg-white text-indigo-600 px-4 py-2 rounded-full hover:bg-gray-100 transition font-semibold text-sm"
-              >
-                <FaUserCircle className="text-xl" />
-                ورود / ثبت‌نام
-              </Link>
-            )}
+            <li>{renderAuthSection()}</li>
           </ul>
 
           <button
@@ -176,34 +188,7 @@ export default function NavBar() {
         }`}
       >
         <div className="flex justify-between items-center px-4 py-4 border-b">
-          {user ? (
-            <div className="flex flex-col gap-2 text-indigo-700 font-semibold text-sm">
-              <div className="flex items-center gap-2">
-                <FaUserCircle className="text-xl" />
-                <span>{user.username}</span>
-              </div>
-              <button
-                onClick={() => {
-                  setIsOpen(false)
-                  handleLogout()
-                }}
-                className="flex items-center gap-2 bg-red-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-red-700 transition"
-              >
-                <FaSignOutAlt className="text-xl" />
-                خروج از حساب
-              </button>
-            </div>
-          ) : (
-            <Link
-              href="/auth/sign-in"
-              className="flex items-center gap-2 bg-indigo-600 text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-indigo-700 transition"
-              onClick={() => setIsOpen(false)}
-            >
-              <FaUserCircle className="text-xl" />
-              ورود / ثبت‌نام
-            </Link>
-          )}
-
+          {renderAuthSection()}
           <IoCloseCircleOutline
             className="text-indigo-600 text-3xl cursor-pointer hover:text-indigo-800 transition"
             onClick={() => setIsOpen(false)}

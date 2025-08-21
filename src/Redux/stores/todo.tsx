@@ -177,7 +177,7 @@ interface TodoState {
 
 const initialState: TodoState = {
   todos: [],
-  filter: 'all', // مقدار اولیه ثابت برای جلوگیری از mismatch
+  filter: 'all',
 }
 
 const todoSlice = createSlice({

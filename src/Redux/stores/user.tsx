@@ -97,7 +97,6 @@ const initialState: AuthState = {
   isUserLoaded: false,
 }
 
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,

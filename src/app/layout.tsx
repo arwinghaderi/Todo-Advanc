@@ -1,7 +1,7 @@
 // app/layout.tsx
 import { cookies } from 'next/headers'
 import { makeStore } from '@/Redux/store'
-import { fetchUserWithToken } from '@/Redux/stores/user'
+import { fetchUserWithToken,setUser } from '@/Redux/stores/user'
 import Providers from './Providers'
 import './globals.css'
 import { Metadata } from 'next'
@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   title: 'ثبت تودو ',
   description: 'در این صفحه می‌توانید وظایف جدید خود را ثبت و مدیریت کنید.',
 }
-
 
 export default async function RootLayout({
   children,
@@ -27,6 +26,8 @@ export default async function RootLayout({
     await store.dispatch(fetchUserWithToken(token))
     const state = store.getState()
     initialUser = state.user.user
+  } else {
+    store.dispatch(setUser(null)) 
   }
 
   return (
