@@ -39,7 +39,7 @@ export default function LoginForm() {
     },
     onSuccess: (result) => {
       ToastNotification('success', `خوش آمدی ${result.username} 👋`, 5000)
-      router.push('/')
+      router.push('/todo')
     },
     onError: (err: any) => {
       ToastNotification(

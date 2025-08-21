@@ -22,13 +22,18 @@ export default function Item({ todo, dragHandleProps }: ItemProps) {
 
   return (
     <li
-      className={`bg-white text-black text-lg flex justify-between items-center px-4 py-2 rounded-full mb-2 transition-all ${
+      className={`bg-white text-black text-lg flex justify-between items-center px-4 py-2 rounded-full mb-2 transition-all h-20 ${
         todo.completed ? 'line-through opacity-60' : ''
       }`}
     >
-      <span className="flex-1 text-right">{todo.todo}</span>
+      <span
+        className="flex-1 text-right truncate text-ellipsis overflow-hidden whitespace-nowrap pr-4"
+        title={todo.todo}
+      >
+        {todo.todo}
+      </span>
 
-      <div className="flex gap-2 items-center">
+      <div className="flex gap-2 items-center flex-shrink-0">
         <button
           onClick={handleToggle}
           className={`cursor-pointer ${

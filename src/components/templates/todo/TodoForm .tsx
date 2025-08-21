@@ -60,7 +60,7 @@ export default function Form() {
       onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col md:flex-row items-start justify-center gap-4 px-4 w-full"
     >
-      <div className="w-full md:w-[20rem] min-h-[5.5rem] flex items-start">
+      <div className="w-full md:w-[20rem] md:min-h-[5.5rem] flex items-start">
         <Input
           placeholder="«افزودن مورد جدید به لیست…»"
           {...register('todo')}
@@ -70,9 +70,11 @@ export default function Form() {
 
       <Button
         type="submit"
-        icon={<FaPlusCircle className="w-6 h-6 pointer-events-none" />}
+        icon={
+          <FaPlusCircle className="   w-10 h-10  md:w-6 md:h-6 pointer-events-none" />
+        }
         text="افزودن"
-        className="bg-white  cursor-pointer text-yellow-400 hover:bg-yellow-400 hover:text-white transition-all  rounded-full flex items-center justify-evenly gap-2 w-full md:w-[10rem]"
+        className="bg-white  text-3xl md:text-xl  cursor-pointer text-yellow-400 hover:bg-yellow-400 hover:text-white transition-all  rounded-full flex items-center py-1 justify-center gap-8 md:gap-3 w-full md:w-[8rem] md:h-10 "
         loading={mutation.isPending}
       />
 
